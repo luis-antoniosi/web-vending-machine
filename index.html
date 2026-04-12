@@ -10,11 +10,6 @@
 
 <body>
     <section id="machineContainer" class="flexRow">
-        <div id="drinksContainer" class="flexCol">
-            <ul id="drinksList">
-                <!-- fetched using js -->
-            </ul>
-        </div>
         <div id="coinsContainer" class="flexRow">
             <div id="coinsList">
                 <div class="coin" draggable="true" data-value="0.25">
@@ -29,16 +24,12 @@
             </div>
         </div>
         <div id="machine">
-            <div class="items">
-                <div class="shelf">
-                    Test
-                </div>
-                <div class="shelf">
-                    Test
-                </div>
+            <div id="drinksList" class="items">
+                <!--fetched using js-->
             </div>
-            <div class="slots">
-                Test
+            <div class="lowerPanel">
+                <div id="balance">R$0.00</div>
+                <div id="coinSlot"></div>
             </div>
         </div>
     </section>

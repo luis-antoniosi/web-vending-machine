@@ -16,7 +16,7 @@ class Drink {
 
 const drinksList = document.getElementById("drinksList");
 const coins = document.querySelectorAll(".coin");
-const machine = document.getElementById("machine");
+const coinSlot = document.getElementById("coinSlot");
 
 let currDrink = 0;
 let allDrinks = [];
@@ -28,19 +28,19 @@ coins.forEach(coin => {
     })
 });
 
-machine.addEventListener("dragover", (event) => {
+coinSlot.addEventListener("dragover", (event) => {
     event.preventDefault();
-    machine.style.background = "#e0e0e0"
+    coinSlot.style.background = "#e0e0e0"
 })
 
-machine.addEventListener("dragleave", (event) => {
+coinSlot.addEventListener("dragleave", (event) => {
     event.preventDefault();
-    machine.style.background = "";
+    coinSlot.style.background = "";
 })
 
-machine.addEventListener("drop", (event) => {
+coinSlot.addEventListener("drop", (event) => {
     event.preventDefault();
-    machine.style.background = "";
+    coinSlot.style.background = "";
 
     const value = parseFloat(event.dataTransfer.getData("coinValue"));
 
@@ -50,46 +50,66 @@ machine.addEventListener("drop", (event) => {
     }
 });
 
-// (async function getDrinks() {
-//     const DATA_URL = "https://api.jsonbin.io/v3/b/69d64173aaba882197d7779a";
-//     try {
-//         const res = await fetch(DATA_URL);
-//         if (!res.ok)
-//             throw new Error(`Failed to fetch drinks! Error: ${response.status}`);
+(async function getDrinks() {
+    const DATA_URL = "https://api.jsonbin.io/v3/b/69d64173aaba882197d7779a";
+    try {
+        const res = await fetch(DATA_URL);
+        if (!res.ok)
+            throw new Error(`Failed to fetch drinks! Error: ${response.status}`);
 
-//         const json = (await res.json()).record.bebidas;
+        const json = (await res.json()).record.bebidas;
 
-//         const data = json.map((drink) => {
-//             {
-//                 return new Drink(drink.sabor, drink.preco, drink.imagem);
-//             }
-//         })
+        const data = json.map((drink) => {
+            {
+                return new Drink(drink.sabor, drink.preco, drink.imagem);
+            }
+        })
 
-//         return data;
-//     } catch (error) {
-//         console.error(error.message);
-//     }
-// })().then((drinks) => listDrinks(drinks))
-
-const drinks = [{ name: "test", price: 10, img: "o" }, { name: "testtttttt", price: 50, img: "aaaaaa" }, { name: "testtttttt", price: 50, img: "aaaaaa" }, { name: "testtttttt", price: 50, img: "aaaaaa" }, { name: "testtttttt", price: 50, img: "aaaaaa" }, { name: "testtttttt", price: 50, img: "aaaaaa" }]
-
-listDrinks(drinks);
+        return data;
+    } catch (error) {
+        console.error(error.message);
+    }
+})().then((drinks) => listDrinks(drinks))
 
 function listDrinks(drinks) {
     setAllDrinks(drinks);
-    for (const [idx, drink] of drinks.entries()) {
-        let listItem = document.createElement("li");
-        let drinkButton = document.createElement("button");
 
-        listItem.className = "drinkItem";
+    let shelf = document.createElement("div");
+    shelf.className = "shelf";
 
-        drinkButton.innerHTML = drink.name;
-        drinkButton.value = idx;
-        drinkButton.onclick = () => setCurrDrink(idx);
+    const drinkTemp = ["hot", "cold"];
 
-        listItem.appendChild(drinkButton);
-        drinksList.appendChild(listItem);
-    }
+    drinks.forEach((drink, idx) => {
+        if (idx % 2 == 0 && idx != 0) {
+            drinksList.appendChild(shelf);
+
+            shelf = document.createElement("div");
+            shelf.className = "shelf";
+        }
+
+        const item = document.createElement("div");
+        item.className = "item";
+
+        const itemImg = document.createElement("img");
+        itemImg.className = "item-image";
+        itemImg.src = drink.image;
+
+        const itemName = document.createElement("div");
+        itemName.className = "item-name";
+        itemName.textContent = drink.name;
+
+        const itemBtn = document.createElement("button");
+        const randomTemp = drinkTemp[Math.floor(Math.random() * drinkTemp.length)];
+        itemBtn.className = `item-btn ${randomTemp}`;
+        itemBtn.textContent = `R$${drink.price.toFixed(2)}`;
+        itemBtn.value = idx;
+        itemBtn.onclick = () => setCurrDrink(idx);
+
+        item.append(itemImg, itemName, itemBtn);
+        shelf.appendChild(item);
+    }); 
+
+    drinksList.appendChild(shelf);
 }
 
 function setAllDrinks(drinks) {
