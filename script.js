@@ -86,7 +86,7 @@ function listDrinks(drinks) {
         }
 
         const item = document.createElement("div");
-        item.className = "item flexCol";
+        item.className = "item flexCol center";
 
         const itemImg = document.createElement("img");
         itemImg.className = "item-image";
@@ -98,7 +98,7 @@ function listDrinks(drinks) {
 
         const itemBtn = document.createElement("button");
         const randomTemp = drinkTemp[Math.floor(Math.random() * drinkTemp.length)];
-        itemBtn.className = `item-btn ${randomTemp}`;
+        itemBtn.className = `item-btn alignCenter ${randomTemp}`;
         itemBtn.textContent = `R$${drink.price.toFixed(2)}`;
         itemBtn.value = idx;
         itemBtn.onclick = () => buyDrink(idx);
