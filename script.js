@@ -9,7 +9,7 @@ class Drink {
         return this.name;
     }
 
-    getValue() {
+    getPrice() {
         return this.price;
     }
 }
@@ -17,8 +17,10 @@ class Drink {
 const drinksList = document.getElementById("drinksList");
 const coins = document.querySelectorAll(".coin");
 const coinSlot = document.getElementById("coinSlot");
+const drinkText = document.getElementById("drinkDropText");
+const changeText = document.getElementById("drinkChange");
 
-let currDrink = 0;
+let currDrink = -1;
 let allDrinks = [];
 let currBalance = 0;
 
@@ -30,23 +32,23 @@ coins.forEach(coin => {
 
 coinSlot.addEventListener("dragover", (event) => {
     event.preventDefault();
-    coinSlot.style.background = "#e0e0e0"
+    coinSlot.style.backgroundColor = "#e0e0e0"
 })
 
 coinSlot.addEventListener("dragleave", (event) => {
     event.preventDefault();
-    coinSlot.style.background = "";
+    coinSlot.style.backgroundColor = "";
 })
 
 coinSlot.addEventListener("drop", (event) => {
     event.preventDefault();
-    coinSlot.style.background = "";
+    coinSlot.style.backgroundColor = "";
 
     const value = parseFloat(event.dataTransfer.getData("coinValue"));
 
     if (!isNaN(value)) {
-        currBalance += value;
-        console.log(currBalance);
+        currBalance = parseFloat((currBalance + value).toFixed(2));
+        updateBalance();
     }
 });
 
@@ -59,11 +61,7 @@ coinSlot.addEventListener("drop", (event) => {
 
         const json = (await res.json()).record.bebidas;
 
-        const data = json.map((drink) => {
-            {
-                return new Drink(drink.sabor, drink.preco, drink.imagem);
-            }
-        })
+        const data = json.map((drink) => new Drink(drink.sabor, drink.preco, drink.imagem));
 
         return data;
     } catch (error) {
@@ -75,7 +73,7 @@ function listDrinks(drinks) {
     setAllDrinks(drinks);
 
     let shelf = document.createElement("div");
-    shelf.className = "shelf";
+    shelf.className = "shelf flexRow";
 
     const drinkTemp = ["hot", "cold"];
 
@@ -84,11 +82,11 @@ function listDrinks(drinks) {
             drinksList.appendChild(shelf);
 
             shelf = document.createElement("div");
-            shelf.className = "shelf";
+            shelf.className = "shelf flexRow";
         }
 
         const item = document.createElement("div");
-        item.className = "item";
+        item.className = "item flexCol";
 
         const itemImg = document.createElement("img");
         itemImg.className = "item-image";
@@ -103,20 +101,47 @@ function listDrinks(drinks) {
         itemBtn.className = `item-btn ${randomTemp}`;
         itemBtn.textContent = `R$${drink.price.toFixed(2)}`;
         itemBtn.value = idx;
-        itemBtn.onclick = () => setCurrDrink(idx);
+        itemBtn.onclick = () => buyDrink(idx);
 
         item.append(itemImg, itemName, itemBtn);
         shelf.appendChild(item);
-    }); 
+    });
 
     drinksList.appendChild(shelf);
 }
 
 function setAllDrinks(drinks) {
     allDrinks = drinks;
-    console.log(allDrinks);
 }
 
-function setCurrDrink(drinkIdx) {
+function buyDrink(drinkIdx) {
     currDrink = allDrinks[drinkIdx];
+
+    if (currDrink) {
+        let targetPrice = currDrink.getPrice();
+        if (currBalance >= targetPrice) {
+            let change = parseFloat((currBalance - targetPrice).toFixed(2));
+            currBalance = 0;
+            updateBalance();
+
+            dispenseDrink(change);
+        }
+        else {
+            drinkText.textContent = "Dinheiro insuficiente."
+            changeText.textContent = "";
+        }
+    }
+}
+
+function updateBalance() {
+    const balanceDisplay = document.getElementById("balance");
+    balanceDisplay.textContent = `R$${currBalance.toFixed(2)}`
+}
+
+function dispenseDrink(change) {
+    drinkText.textContent = `Refrigerante ${currDrink.getName()} liberado`;
+    if (change > 0)
+        changeText.textContent = `Troco: R$${change.toFixed(2)}`;
+    else
+        changeText.textContent = "";    
 }

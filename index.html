@@ -1,38 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<!-- insp: https://www.theodysseyonline.com/media-library/image.jpg?id=56079781 -->
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Vending machine</title>
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
-    <section id="machineContainer" class="flexRow">
-        <div id="coinsContainer" class="flexRow">
-            <div id="coinsList">
-                <div class="coin" draggable="true" data-value="0.25">
+    <main id="machineContainer" class="flexRow">
+        <aside id="coinsContainer" class="flexRow">
+            <ul id="coinsList" class="flexCol">
+                <li class="coin" draggable="true" data-value="0.25">
                     <h2>R$0.25</h2>
-                </div>
-                <div class="coin" draggable="true" data-value="0.5">
+                </li>
+                <li class="coin" draggable="true" data-value="0.5">
                     <h2>R$0.50</h2>
-                </div>
-                <div class="coin" draggable="true" data-value="1.00">
+                </li>
+                <li class="coin" draggable="true" data-value="1.00">
                     <h2>R$1.00</h2>
-                </div>
-            </div>
-        </div>
-        <div id="machine">
-            <div id="drinksList" class="items">
+                </li>
+            </ul>
+        </aside>
+        <section id="machine" class="flexCol">
+            <div id="drinksList" class="items flexCol">
                 <!--fetched using js-->
             </div>
-            <div class="lowerPanel">
-                <div id="balance">R$0.00</div>
-                <div id="coinSlot"></div>
-            </div>
-        </div>
-    </section>
+            <footer id="lowerPanel" class="flexCol">
+                <div id="balancePanel" class="flexRow">
+                    <output id="balance">R$0.00</output>
+                    <div id="coinSlot"></div>
+                </div>
+                <div id="drinkDrop" class="flexCol">
+                    <span id="drinkDropText"></span>
+                    <span id="drinkChange"></span>
+                </div>
+            </footer>
+        </section>
+    </main>
 </body>
 <script src="script.js"></script>
 
